@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — CyberAware AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    canvas{background:rgba(10,15,31,.25);border:1px solid rgba(0,229,255,.12);border-radius:14px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-bottom:1px solid rgba(0,229,255,.12)}
+    .actions button{margin-right:6px}
+    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-lock-2-line"></i> Admin</div>
+        <h1 class="title">Dashboard</h1>
+        <p class="sub">Monitor scans and video engagement</p>
+        <div class="panel">
+          <div class="grid2">
+            <div>
+              <h3>Total Scans</h3>
+              <canvas id="totalScans"></canvas>
+            </div>
+            <div>
+              <h3>Safe vs Unsafe</h3>
+              <canvas id="safeUnsafe"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <h3>Most Watched Topics</h3>
+          <canvas id="topVideos"></canvas>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <h3>Recent Scans</h3>
+          <table id="scanTable">
+            <thead><tr><th>URL</th><th>Safe</th><th>User</th><th>At</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">Admins can remove entries or verify safe links.</div></footer>
+
+  <!-- Dock + Chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="index.html"><i class="ri-home-4-line"></i> Home</button>
+    <button class="chip" data-nav="scan.html"><i class="ri-shield-check-line"></i> Scan</button>
+    <button class="chip" data-nav="videos.html"><i class="ri-movie-2-line"></i> Videos</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body"><div class="bot-msg">Admins: use the charts to monitor risk.</div></div>
+    <div class="chatbot-input"><input type="text" placeholder="Ask a safety question..."><button class="chip" type="button">Send</button></div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase.js';
+    import { requireAdmin, toast, initChatbotUI } from './script.js';
+    import { collection, query, orderBy, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+    try { await requireAdmin(auth, db); } catch(e){ location.href = 'login.html'; }
+
+    const scansRef = collection(db,'scans');
+    const logsRef = collection(db,'video_logs');
+    const scanQ = query(scansRef, orderBy('checkedAt','desc'));
+
+    const ctxTotal = document.getElementById('totalScans');
+    const ctxSafe = document.getElementById('safeUnsafe');
+    const ctxTop = document.getElementById('topVideos');
+    let totalChart = new Chart(ctxTotal,{type:'bar',data:{labels:[],datasets:[{label:'Scans',data:[],backgroundColor:'#00e5ff'}]},options:{plugins:{legend:{display:false}}}});
+    let safeChart = new Chart(ctxSafe,{type:'doughnut',data:{labels:['Safe','Unsafe'],datasets:[{data:[0,0],backgroundColor:['#00ff88','#ff6b6b']}]}});
+    let topChart = new Chart(ctxTop,{type:'bar',data:{labels:[],datasets:[{label:'Watches',data:[],backgroundColor:'#8a7dff'}]},options:{plugins:{legend:{display:false}},indexAxis:'y'}});
+
+    const tbody = document.querySelector('#scanTable tbody');
+    onSnapshot(scanQ, snap =>{
+      const rows = [];
+      let total = 0, safe=0, unsafe=0;
+      snap.forEach(d=>{
+        total++; const s = d.data(); if(s.safe) safe++; else unsafe++;
+        rows.push(`<tr><td>${s.url}</td><td>${s.safe?'✅':'⚠️'}</td><td>${s.userId||''}</td><td>${s.checkedAt?.toDate?.().toLocaleString?.()||''}</td><td class="actions"><button data-del="${d.id}">Delete</button>${!s.safe?`<button data-verify="${d.id}">Mark Safe</button>`:''}</td></tr>`);
+      });
+      tbody.innerHTML = rows.join('');
+      totalChart.data.labels = ['Scans'];
+      totalChart.data.datasets[0].data = [total];
+      totalChart.update();
+      safeChart.data.datasets[0].data = [safe, unsafe];
+      safeChart.update();
+    });
+
+    onSnapshot(logsRef, snap =>{
+      const counts = new Map();
+      snap.forEach(d=>{ const t = d.data().videoTitle; counts.set(t, (counts.get(t)||0)+1); });
+      const labels = Array.from(counts.keys());
+      const data = Array.from(counts.values());
+      topChart.data.labels = labels; topChart.data.datasets[0].data = data; topChart.update();
+    });
+
+    tbody.addEventListener('click', async e=>{
+      const del = e.target.getAttribute('data-del');
+      const ver = e.target.getAttribute('data-verify');
+      if(del){ await deleteDoc(doc(db,'scans',del)); toast('Deleted'); }
+      if(ver){ await updateDoc(doc(db,'scans',ver), { safe: true }); toast('Marked safe'); }
+    });
+    initChatbotUI();
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — CyberAware AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-send-plane-2-line"></i> Contact</div>
+        <h1 class="title">Get in touch</h1>
+        <div class="panel" style="max-width:760px;margin:14px auto 0">
+          <form id="contact-form">
+            <div class="row">
+              <label><span>Name</span><input id="c-name" required></label>
+              <label><span>Email</span><input id="c-email" type="email" required></label>
+            </div>
+            <label><span>Message</span><textarea id="c-msg" rows="4" required></textarea></label>
+            <button class="btn" type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">We’ll respond within 1–2 business days.</div></footer>
+
+  <!-- Dock + Chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="index.html"><i class="ri-home-4-line"></i> Home</button>
+    <button class="chip" data-nav="scan.html"><i class="ri-shield-check-line"></i> Scan</button>
+    <button class="chip" data-nav="videos.html"><i class="ri-movie-2-line"></i> Videos</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body"><div class="bot-msg">We can help you get started with the demo.</div></div>
+    <div class="chatbot-input"><input type="text" placeholder="Ask a safety question..."><button class="chip" type="button">Send</button></div>
+  </div>
+
+  <script type="module">
+    import { db, auth } from './firebase.js';
+    import { toast, initChatbotUI } from './script.js';
+    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    const form = document.getElementById('contact-form');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('c-name').value.trim();
+      const email = document.getElementById('c-email').value.trim();
+      const message = document.getElementById('c-msg').value.trim();
+      await addDoc(collection(db,'messages'), { name, email, message, createdAt: serverTimestamp() });
+      toast('Message sent ✅');
+      form.reset();
+    });
+    initChatbotUI();
+  </script>
+</body>
+</html>
+
+

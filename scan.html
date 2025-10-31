@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan a Link — CyberAware AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-survey-line"></i> Link Scanner</div>
+        <h1 class="title">Check if a link is safe</h1>
+        <p class="sub">Powered by Google Safe Browsing</p>
+        <div class="container panel" style="margin-top:14px">
+          <form id="scan-form">
+            <label>
+              <span class="label">Paste URL</span>
+              <input id="scan-url" type="url" placeholder="https://example.com" required />
+            </label>
+            <div style="margin-top:10px">
+              <button class="btn" type="submit"><i class="ri-shield-check-line"></i> Scan Now</button>
+            </div>
+          </form>
+          <div id="scan-result" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Scan results are saved to your account history.</div>
+  </footer>
+
+  <!-- Dock + Chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="index.html"><i class="ri-home-4-line"></i> Home</button>
+    <button class="chip" data-nav="videos.html"><i class="ri-movie-2-line"></i> Videos</button>
+    <button class="chip" data-nav="dashboard.html"><i class="ri-dashboard-3-line"></i> Dashboard</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body"><div class="bot-msg">Paste the full URL, including https://</div></div>
+    <div class="chatbot-input"><input type="text" placeholder="Ask a safety question..."><button class="chip" type="button">Send</button></div>
+  </div>
+
+  <script type="module">
+    import { auth, db, CHECK_LINK_ENDPOINT } from './firebase.js';
+    import { toast, initChatbotUI } from './script.js';
+    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+    let currentUserId = 'guest';
+    onAuthStateChanged(auth, user => { currentUserId = user ? user.uid : 'guest'; });
+
+    const form = document.getElementById('scan-form');
+    const input = document.getElementById('scan-url');
+    const result = document.getElementById('scan-result');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const url = input.value.trim();
+      result.textContent = 'Scanning...';
+      try{
+        const res = await fetch(CHECK_LINK_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url, userId: currentUserId }) });
+        const data = await res.json();
+        if(data.safe){
+          result.textContent = '✅ This link is safe!';
+          result.style.color = '#00ff88';
+        }else{
+          result.textContent = '⚠️ Suspicious link detected — avoid clicking.';
+          result.style.color = '#ff6b6b';
+        }
+        await addDoc(collection(db,'scans'), { url, safe: !!data.safe, checkedAt: serverTimestamp(), userId: currentUserId });
+        toast('Saved result to history');
+      }catch(err){
+        console.error(err);
+        result.textContent = 'Error scanning link.';
+      }
+    })
+    initChatbotUI();
+  </script>
+</body>
+</html>
+
+

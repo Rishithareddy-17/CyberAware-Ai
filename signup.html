@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — CyberAware AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-user-add-line"></i> Auth</div>
+        <h1 class="title">Create an account</h1>
+        <div class="panel" style="max-width:600px;margin:14px auto 0">
+          <form id="signup-form">
+            <label><span>Name</span><input id="s-name" required></label>
+            <label><span>Email</span><input id="s-email" type="email" required></label>
+            <label><span>Password</span><input id="s-pass" type="password" required></label>
+            <button class="btn" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">Start building safer habits.</div></footer>
+
+  <!-- Dock + Chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="index.html"><i class="ri-home-4-line"></i> Home</button>
+    <button class="chip" data-nav="login.html"><i class="ri-user-3-line"></i> Login</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body"><div class="bot-msg">Use a strong password and store it safely.</div></div>
+    <div class="chatbot-input"><input type="text" placeholder="Ask a safety question..."><button class="chip" type="button">Send</button></div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase.js';
+    import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { toast, initChatbotUI } from './script.js';
+    const form = document.getElementById('signup-form');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('s-name').value.trim();
+      const email = document.getElementById('s-email').value.trim();
+      const pass = document.getElementById('s-pass').value.trim();
+      try{
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await updateProfile(cred.user, { displayName: name });
+        await setDoc(doc(db,'users',cred.user.uid), { name, email, role:'user' });
+        location.href = 'index.html';
+      }catch(e){ console.error(e); toast('Signup failed'); }
+    });
+    initChatbotUI();
+  </script>
+</body>
+</html>
+
+

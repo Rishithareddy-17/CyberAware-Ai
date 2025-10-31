@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solution – CyberAware AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <canvas id="hero-grid" aria-hidden="true"></canvas>
+    <header class="site-header" role="banner">
+        <div class="container nav-wrap">
+            <div class="brand">
+                <span class="logo-glow" aria-hidden="true"></span>
+                <span class="brand-text">CyberAware <strong>AI</strong></span>
+            </div>
+            <nav class="site-nav" role="navigation" aria-label="Primary">
+                <a href="index.html" target="_blank" rel="noopener">Home</a>
+                <a href="about.html" target="_blank" rel="noopener">About</a>
+                <a href="solution.html" target="_blank" rel="noopener">Solution</a>
+                <a href="impact.html" target="_blank" rel="noopener">Impact</a>
+                <a href="contact.html" target="_blank" rel="noopener" class="btn btn-ghost">Try Demo</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section solution" aria-labelledby="solution-title">
+            <div class="container panel">
+                <div class="eyebrow"><i class="ri-robot-2-line"></i> CyberAware AI</div>
+                <h1 id="solution-title" class="section-title">Your Smart Cyber Safety Coach</h1>
+                <p class="lead">An AI-powered awareness platform that teaches users to identify cyber threats, strengthen passwords, and detect scams through interactive learning.</p>
+
+                <div class="features">
+                    <article class="feature-card">
+                        <div class="icon-wrap"><i class="ri-robot-2-line"></i></div>
+                        <h3>AI Chatbot Coach</h3>
+                        <p>Practice real-world attack scenarios and ask questions 24/7.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="icon-wrap"><i class="ri-spam-2-line"></i></div>
+                        <h3>Phishing Simulator</h3>
+                        <p>Learn safe clicking with interactive fake vs real examples.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="icon-wrap"><i class="ri-shield-keyhole-line"></i></div>
+                        <h3>Password Advisor</h3>
+                        <p>AI checks password strength and suggests improvements.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="icon-wrap"><i class="ri-radar-line"></i></div>
+                        <h3>Cyber Tips Feed</h3>
+                        <p>Daily AI-generated tips to build strong habits.</p>
+                    </article>
+                </div>
+
+                <div class="slider" aria-label="Phishing Examples">
+                    <div class="slides">
+                        <div class="slide">
+                            <div class="card fake">
+                                <h4>Fake: "Urgent account update required"</h4>
+                                <p>Generic greeting, suspicious link domain, pressure language.</p>
+                            </div>
+                            <div class="card real">
+                                <h4>Real: Security alert from your bank</h4>
+                                <p>Personalized greeting, official domain, no links asking credentials.</p>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="card fake">
+                                <h4>Fake: Free gift card</h4>
+                                <p>Typos, sense of urgency, asks for personal info.</p>
+                            </div>
+                            <div class="card real">
+                                <h4>Real: Password change confirmation</h4>
+                                <p>Confirms action you initiated, provides support channels.</p>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="card fake">
+                                <h4>Fake: Package delivery issue</h4>
+                                <p>Unknown sender, tracking link to unrelated domain.</p>
+                            </div>
+                            <div class="card real">
+                                <h4>Real: MFA reminder</h4>
+                                <p>Official tone, clear steps, no credential request via email.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="prev" aria-label="Previous"><i class="ri-arrow-left-s-line"></i></button>
+                        <button class="next" aria-label="Next"><i class="ri-arrow-right-s-line"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <blockquote>“The weakest link in cybersecurity is human error — and the strongest defense is awareness.”</blockquote>
+            <p class="copyright">© <span id="year"></span> CyberAware AI</p>
+        </div>
+    </footer>
+
+    <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach">
+        <i class="ri-message-3-line"></i>
+    </button>
+    <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+        <div class="chatbot-header">
+            <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+            <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+        </div>
+        <div class="chatbot-body">
+            <div class="bot-msg">Hi! I can help you spot phishing and strengthen your passwords.</div>
+            <div class="bot-msg subtle">(Demo only — no backend connected.)</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" placeholder="Ask a safety question..." aria-label="Chat message" />
+            <button class="btn btn-ghost" type="button">Send</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+

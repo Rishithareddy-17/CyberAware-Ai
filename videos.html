@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Videos — CyberAware AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    .video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+    .vcard{background:linear-gradient(180deg,rgba(15,23,48,.55),rgba(15,23,48,.32));border:1px solid rgba(0,229,255,.16);border-radius:14px;overflow:hidden}
+    .vcard iframe{width:100%;height:200px;border:0;display:block}
+    .vcard h3{margin:10px 12px 14px;font-size:16px}
+    @media(max-width:900px){.video-grid{grid-template-columns:1fr 1fr}.vcard iframe{height:180px}}
+    @media(max-width:560px){.video-grid{grid-template-columns:1fr}.vcard iframe{height:180px}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Sign In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-movie-2-line"></i> Learn</div>
+        <h1 class="title">Cybersecurity Videos</h1>
+        <p class="sub">Short, practical lessons</p>
+        <div class="panel">
+          <div class="video-grid" id="video-grid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">Watch and build safer habits.</div></footer>
+
+  <!-- Dock + Chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="index.html"><i class="ri-home-4-line"></i> Home</button>
+    <button class="chip" data-nav="scan.html"><i class="ri-shield-check-line"></i> Scan</button>
+    <button class="chip" data-nav="dashboard.html"><i class="ri-dashboard-3-line"></i> Dashboard</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body"><div class="bot-msg">Ask which videos to watch first.</div></div>
+    <div class="chatbot-input"><input type="text" placeholder="Ask a safety question..."><button class="chip" type="button">Send</button></div>
+  </div>
+
+  <script type="module">
+    import { db, auth } from './firebase.js';
+    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { neonTitles, initChatbotUI } from './script.js';
+    neonTitles(); initChatbotUI();
+
+    let currentUserId = 'guest';
+    onAuthStateChanged(auth, user => { currentUserId = user ? user.uid : 'guest'; });
+
+    const videos = [
+      { title: 'How to spot phishing emails', id: 'https://www.youtube.com/embed/0m7qVPV2wMQ' },
+      { title: 'Strong passwords & 2-Step Verification', id: 'https://www.youtube.com/embed/3v4YV_3sAtk' },
+      { title: 'What is Malware and How to Protect Yourself', id: 'https://www.youtube.com/embed/28N3W5JQFco' },
+      { title: 'Safe Online Banking', id: 'https://www.youtube.com/embed/hk3X1cxZVw8' },
+      { title: 'How to spot fake websites', id: 'https://www.youtube.com/embed/mcP5AnbcW2M' },
+      { title: 'Protecting Your Privacy on Social Media', id: 'https://www.youtube.com/embed/6p7GqzbGkA8' }
+    ];
+
+    const grid = document.getElementById('video-grid');
+    videos.forEach(v => {
+      const card = document.createElement('div');
+      card.className = 'vcard';
+      card.innerHTML = `<iframe src="${v.id}" allowfullscreen title="${v.title}"></iframe><h3>${v.title}</h3>`;
+      grid.appendChild(card);
+      card.addEventListener('click', async ()=>{
+        await addDoc(collection(db,'video_logs'), { userId: currentUserId, videoTitle: v.title, watchedAt: serverTimestamp() });
+      });
+    });
+  </script>
+</body>
+</html>
+
+

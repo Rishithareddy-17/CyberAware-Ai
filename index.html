@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberAware AI — Stay Safe Online</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <div class="brand"><span class="logo"></span>CyberAware <strong>AI</strong></div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="scan.html">Scan</a>
+        <a href="videos.html">Videos</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="contact.html" class="btn">Try Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow"><i class="ri-shield-keyhole-line"></i> Data Security & Privacy</div>
+        <h1 class="title">CyberAware AI — Stay Safe Online.</h1>
+        <p class="sub">Scan links. Learn. Stay protected.</p>
+        <div style="margin-top:14px">
+          <a class="btn" href="scan.html"><i class="ri-shield-check-line"></i> Scan a Link</a>
+          <a class="btn" href="videos.html" style="margin-left:8px"><i class="ri-movie-line"></i> Watch Videos</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick">
+      <div class="container panel">
+        <div class="grid4">
+          <a class="card" href="scan.html"><i class="ri-survey-line"></i><div><h3>Link Scanner</h3><p class="label">Detect phishing & malware</p></div><i class="ri-arrow-right-up-line"></i></a>
+          <a class="card" href="videos.html"><i class="ri-movie-2-line"></i><div><h3>Learn Fast</h3><p class="label">Bite-sized cyber lessons</p></div><i class="ri-arrow-right-up-line"></i></a>
+          <a class="card" href="dashboard.html"><i class="ri-dashboard-3-line"></i><div><h3>Admin Dashboard</h3><p class="label">Monitor reports & analytics</p></div><i class="ri-arrow-right-up-line"></i></a>
+          <a class="card" href="login.html"><i class="ri-user-3-line"></i><div><h3>Sign In</h3><p class="label">Access your history</p></div><i class="ri-arrow-right-up-line"></i></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">“The weakest link in cybersecurity is human error — and the strongest defense is awareness.”</div>
+  </footer>
+
+  <!-- Floating dock and chatbot -->
+  <div class="dock">
+    <button class="chip" data-chatbot><i class="ri-robot-2-line"></i> AI Chatbot</button>
+    <button class="chip" data-nav="scan.html"><i class="ri-shield-check-line"></i> Scan</button>
+    <button class="chip" data-nav="videos.html"><i class="ri-movie-2-line"></i> Videos</button>
+    <button class="chip" data-nav="dashboard.html"><i class="ri-dashboard-3-line"></i> Dashboard</button>
+    <button class="chip" data-nav="contact.html"><i class="ri-send-plane-2-line"></i> Contact</button>
+  </div>
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-expanded="false" aria-controls="chatbot-panel" aria-label="Open AI Coach"><i class="ri-message-3-line"></i></button>
+  <div id="chatbot-panel" class="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="chatbot-title" hidden>
+    <div class="chatbot-header">
+      <h3 id="chatbot-title"><i class="ri-robot-2-line"></i> AI Coach</h3>
+      <button class="chatbot-close" aria-label="Close"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="chatbot-body">
+      <div class="bot-msg">Hi! Ask me about phishing, strong passwords, and safe browsing.</div>
+      <div class="bot-msg">This is a demo UI. Backend can be added later.</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" placeholder="Ask a safety question..." aria-label="Chat message" />
+      <button class="chip" type="button">Send</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { neonTitles, initChatbotUI } from './script.js';
+    neonTitles();
+    initChatbotUI();
+  </script>
+</body>
+</html>
+
+

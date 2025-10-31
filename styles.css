@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@600;800&display=swap');
+:root { --bg:#060913; --bg2:#0b1124; --text:#e8f3ff; --sub:#9fb1c9; --blue:#00e5ff; --green:#00ff88; --purple:#8a7dff; --card:rgba(18,25,52,.55); --radius:16px; }
+*{box-sizing:border-box}
+body{margin:0;color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1000px 500px at 85% -20%, rgba(0,229,255,.16), transparent 60%),radial-gradient(800px 400px at 10% -10%, rgba(0,255,136,.12), transparent 60%),linear-gradient(180deg,var(--bg),var(--bg2));}
+.container{width:min(1100px,92%);margin:0 auto}
+.site-header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(6,9,19,.8),rgba(6,9,19,.3));backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,229,255,.12)}
+.nav-wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;gap:10px;align-items:center;font-family:Orbitron,Inter,sans-serif;font-weight:800}
+.logo{width:14px;height:14px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px var(--blue),0 0 28px var(--green)}
+.site-nav{display:flex;gap:10px;align-items:center;padding:4px;border-radius:999px;background:rgba(9,14,30,.35);border:1px solid rgba(0,229,255,.12)}
+.site-nav a{color:var(--text);text-decoration:none;padding:8px 12px;border-radius:999px}
+.site-nav a:hover{color:#001018;background:linear-gradient(90deg,var(--blue),var(--green));box-shadow:0 6px 18px rgba(0,229,255,.22)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:1px solid rgba(0,255,136,.35);background:linear-gradient(90deg,var(--blue),var(--green));color:#001018;cursor:pointer;text-decoration:none}
+.hero{padding:96px 0;text-align:center;position:relative}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid rgba(0,229,255,.24);border-radius:999px;background:rgba(0,229,255,.12);font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+.title{font-family:Orbitron,Inter,sans-serif;font-size:clamp(34px,6vw,64px);margin:12px 0}
+.sub{color:var(--sub);font-size:18px;margin:0 0 18px}
+.quick{padding:36px 0}
+.panel{background:linear-gradient(180deg,rgba(15,23,48,.5),rgba(15,23,48,.28));border:1px solid rgba(0,229,255,.12);border-radius:18px;padding:18px;backdrop-filter:blur(8px)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px;border-radius:14px;background:linear-gradient(180deg,rgba(15,23,48,.55),rgba(15,23,48,.32));border:1px solid rgba(0,229,255,.16);text-decoration:none;color:var(--text)}
+.card:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(0,229,255,.14);border-color:rgba(0,255,136,.3)}
+.card i{color:var(--blue)}
+.label{color:var(--sub);font-size:13px;margin:0}
+.footer{padding:40px 0 80px;border-top:1px solid rgba(0,229,255,.12);text-align:center;color:var(--sub)}
+/* Forms */
+form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:grid;gap:6px;color:var(--sub);font-size:14px}
+input,textarea{background:rgba(10,15,31,.55);border:1px solid rgba(0,229,255,.25);border-radius:10px;color:var(--text);padding:12px}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,229,255,.18)}
+/* Responsive */
+@media(max-width:900px){.grid4{grid-template-columns:1fr 1fr}form .row{grid-template-columns:1fr}}
+@media(max-width:560px){.grid4{grid-template-columns:1fr}}
+
+/* Floating dock and chatbot */
+.dock{position:fixed;right:16px;bottom:16px;display:flex;gap:8px;flex-wrap:wrap;z-index:60}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:linear-gradient(180deg,rgba(15,23,48,.55),rgba(15,23,48,.32));border:1px solid rgba(0,229,255,.18);color:var(--text);text-decoration:none;cursor:pointer}
+.chip:hover{box-shadow:0 12px 28px rgba(0,229,255,.18);border-color:rgba(0,255,136,.3)}
+.chatbot-toggle{position:fixed;right:16px;bottom:80px;width:54px;height:54px;border-radius:50%;border:0;background:linear-gradient(90deg,var(--blue),var(--green));color:#001018;box-shadow:0 14px 40px rgba(0,255,136,.34),0 0 26px rgba(0,229,255,.34);z-index:60;cursor:pointer}
+.chatbot-panel{position:fixed;right:16px;bottom:146px;width:min(360px,92vw);background:rgba(10,15,31,.92);border:1px solid rgba(0,229,255,.22);border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:60;overflow:hidden}
+.chatbot-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(0,229,255,.16)}
+.chatbot-header h3{margin:0;font-family:Orbitron,Inter,sans-serif;font-size:16px}
+.chatbot-close{background:transparent;border:0;color:var(--text);cursor:pointer}
+.chatbot-body{max-height:280px;overflow:auto;display:grid;gap:8px;padding:12px}
+.bot-msg{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.18);border-radius:10px;padding:10px 12px}
+.chatbot-input{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 12px;border-top:1px solid rgba(0,229,255,.16)}
+.chatbot-input input{background:rgba(10,15,31,.6);border:1px solid rgba(0,229,255,.25);border-radius:10px;color:var(--text);padding:10px 12px}
+
+
